@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  pg:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=ib_api
+    ports:
+      - 5432:5432
+    volumes:
+      - ib-api-pg:/var/lib/postgresql/data
+      - ./initdb.d:/docker-entrypoint-initdb.d
+  redis:
+    image: redis:6-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ib-api-redis:/data
+  tws:
+    image: martinffx/ibc-tws
+    build:
+      context: ./tws
+      args:
+        USER: docker
+        TWS_VERSION: "latest"
+        IBC_VERSION: 3.8.2
+        VNC_PASSWORD: "password123"
+    env_file: .env
+    ports:
+      - 7496:7496
+      - 7497:7497
+      - 5900:5900
+    volumes:
+      - ./tws/logs:/home/docker/ibc/logs
+
+
+volumes:
+  ib-api-pg:
+  ib-api-redis:
+      

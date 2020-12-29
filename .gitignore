@@ -1,0 +1,12 @@
+.DS_Store
+.idea
+*.log
+tmp/
+.env
+logs/
+
+*.class
+build
+.cpcache
+# ignore giant uncompressed sql file
+initdb.d/seed.sql
