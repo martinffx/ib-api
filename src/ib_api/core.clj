@@ -1,15 +1,11 @@
 (ns ib-api.core
-  (:require [taoensso.timbre :as log]))
+  (:require [taoensso.timbre :as log]
+            [mount.core :as mount]
+            [ib-api.ib-client :as client]))
 
-(defn start []
-  (log/info "Start..."))
-
-(defn stop []
-  (log/info "Stop..."))
 
 (defn -main []
-  (start)
+  (mount/start #'client/client)
   (.addShutdownHook
-   (Runtime/getRuntime)
-   (Thread. ^Runnable stop))
+   (mount/stop))
   (read-line))

@@ -23,9 +23,8 @@ services:
     build:
       context: ./tws
       args:
-        USER: docker
-        TWS_VERSION: "latest"
-        IBC_VERSION: 3.8.2
+        TWS_VERSION: "978"
+        IBC_VERSION: "3.8.4-beta.2"
         VNC_PASSWORD: "password123"
     env_file: .env
     ports:

@@ -5,7 +5,7 @@
              [ib-api.core]))
 
 (defn start []
-  (mount/start #'ib-api.core/server))
+  (mount/start #'ib-api.ib-client/client))
 
 (defn stop []
   (mount/stop))
