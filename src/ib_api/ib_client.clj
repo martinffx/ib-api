@@ -1,14 +1,13 @@
 (ns ib-api.ib-client
     (:require [taoensso.timbre :as log]
-              [mount.core :refer [defstate]]
-              [ib-api.config :refer [config]])
+              [integrant.core :as ig])
   (:import (com.ib.client EWrapper EJavaSignal EClientSocket)))
 
 (defn build-ib-wrapper
   "Creates an instance of the EWrapper interface to handle callbacks
   from the IB client."
   [connected]
-  
+
   (reify EWrapper
     (^void error [this ^Exception e] (println e))
     (^void error [this ^String errorMsg] (println errorMsg))
@@ -28,7 +27,7 @@
     [connected connection-attempt-count reader-signal ib-wrapper client-socket]
   Client
   (connect
-    [this host port]    
+    [this host port]
     ;; Establish connection to TWS
     (log/info client-socket)
     (log/info host)
@@ -44,16 +43,16 @@
     (if connected
       this ;; TODO: Handle reader signals
       (throw (Exception. "Failed to establish a connection."))))
-  
+
   (disconnect
     [this]
-    
+
     (.eDisconnect client-socket)))
 
 (defn build-ib-client
   "Builds a healthy IBClient with a healthy connection to TWS"
   [host port]
-  
+
   (let [connected (atom false)
         connection-attempt-count (atom 0)
         reader-signal (new EJavaSignal)
@@ -62,7 +61,8 @@
         ib-client (IBClient. connected connection-attempt-count reader-signal ib-wrapper client-socket)]
     (.connect ib-client host port)))
 
+(defmethod ig/init-key :ib/client [_ {:keys [host port]}]
+  (build-ib-client host port))
 
-(defstate client
-  :start (build-ib-client (:tws-host config) (:tws-port config))
-  :stop (.disconnect client))
+(defmethod ig/halt-key! :ib/client [_ client]
+  (.disconnect client))

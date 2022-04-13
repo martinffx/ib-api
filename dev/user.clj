@@ -1,14 +1,17 @@
 (ns user
-  (:require [clojure.pprint :refer [pp]]
-             [clojure.tools.namespace.repl :as tn]
-             [mount.core :as mount]
-             [ib-api.core]))
+  (:require [clojure.tools.namespace.repl :as tn]
+            [integrant.core :as ig]
+            [clojure.java.io :as io]
+            [ib-api.core]))
+
+(def system (atom nil))
 
 (defn start []
-  (mount/start #'ib-api.ib-client/client))
+  (let [config (ig/read-string (slurp (io/resource "system.edn")))]
+    (swap! system (fn [_] (ig/init config)))))
 
 (defn stop []
-  (mount/stop))
+  (ig/halt! @system))
 
 (defn refresh []
   (stop)
@@ -28,6 +31,4 @@
   "stops all states defined by defstate, reloads modified source files, and restarts the states"
   []
   (stop)
-  (tn/refresh :after 'dev/go))
-
-(mount/in-clj-mode)
+  (tn/refresh :after 'user/go))
