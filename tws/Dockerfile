@@ -2,7 +2,6 @@ FROM ubuntu:20.04
 MAINTAINER Martin C. Richards <martinffx@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV DISPLAY :0
 ENV USER "docker"
 
 ARG VNC_PASSWORD "password"
@@ -34,6 +33,10 @@ RUN wget -q https://github.com/IbcAlpha/IBC/releases/download/$IBC_VERSION/IBCLi
     rm IBCLinux-$IBC_VERSION.zip
 RUN sed -i "s|TWS_MAJOR_VRSN=972|TWS_MAJOR_VRSN=$TWS_VERSION|g" /opt/ibc/twsstart.sh && \
     sed -i "s|TWS_MAJOR_VRSN=972|TWS_MAJOR_VRSN=$TWS_VERSION|g" /opt/ibc/gatewaystart.sh
+
+
+# Must be set after install of IBGateway
+ENV DISPLAY :0
 
 # Copy profile settings
 COPY ./Jts/jts.ini /home/$USER/Jts/

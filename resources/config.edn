@@ -1,0 +1,4 @@
+{:secrets #include ".secrets.edn"
+ :tws {:tws-host "0.0.0.0" :tws-port 4002}
+ :iex {:url "https://cloud.iexapis.com/v1" :api-token #ref [:secrets :iex-api-token]}
+ :xtdb {:tx-log "data/tx-log" :doc-store "data/doc-store" :index-store "data/index-store"}}

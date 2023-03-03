@@ -1,6 +1,11 @@
 (ns ib-api.config
-  (:require [mount.core :refer [defstate]]
+  (:require [integrant.core :as ig]
+            [clojure.java.io :as io]
+            [taoensso.timbre :as log]
             [aero.core :refer (read-config)]))
 
 
-(defstate config :start (read-config (clojure.java.io/resource "config.edn")))
+(defmethod ig/init-key :core/config [_ {:keys [config-file]}]
+  (let [c (io/resource config-file)]
+    (log/info c)
+    (read-config c)))

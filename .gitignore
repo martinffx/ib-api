@@ -4,6 +4,9 @@
 tmp/
 .env
 logs/
+.nrepl-port
+.clj-kondo/.cache
+data/
 
 *.class
 build

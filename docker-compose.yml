@@ -28,8 +28,15 @@ services:
         VNC_PASSWORD: "password123"
     env_file: .env
     ports:
+      # TWS LIVE
       - 7496:7496
+      # TWS PAPER
       - 7497:7497
+      # IBGateway LIVE
+      - 4001:4001
+      # IBGateway Paper
+      - 4002:4002
+      # VNC
       - 5900:5900
     volumes:
       - ./tws/logs:/home/docker/ibc/logs

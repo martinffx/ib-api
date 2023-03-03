@@ -1,0 +1,5 @@
+{:core/config {:config-file "config.edn"}
+ :core/xtdb {:config #ig/ref :core/config}
+ :iex/client {:config #ig/ref :core/config}
+ :iex/repo {:xtdb #ig/ref :core/xtdb}
+ :iex/core {:client #ig/ref :iex/client :repo #ig/ref :iex/repo}}
