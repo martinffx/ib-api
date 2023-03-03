@@ -1,5 +1,7 @@
 (ns ib-api.ib-client
     (:require [taoensso.timbre :as log])
+    (:require [taoensso.timbre :as log]
+              [integrant.core :as ig])
   (:import (com.ib.client EWrapper EJavaSignal EClientSocket)))
 
 (defn build-ib-wrapper
@@ -27,7 +29,10 @@
   Client
   (connect
     [this host port]
-    (log/debug (str "Establish connection to TWS: " host ":" port))
+    ;; Establish connection to TWS
+    (log/info client-socket)
+    (log/info host)
+    (log/info port)
     (.eConnect client-socket host port 0)
 
     (log/debug "Wait for it to become healthy")
@@ -45,8 +50,7 @@
   (disconnect
     [this]
 
-    (.eDisconnect client-socket)
-    this))
+    (.eDisconnect client-socket)))
 
 (defn build-ib-client
   "Builds a healthy IBClient with a healthy connection to TWS"
@@ -59,3 +63,9 @@
         client-socket (new EClientSocket ib-wrapper reader-signal)
         ib-client (IBClient. connected connection-attempt-count reader-signal ib-wrapper client-socket)]
     (.connect ib-client host port)))
+
+(defmethod ig/init-key :ib/client [_ {:keys [host port]}]
+  (build-ib-client host port))
+
+(defmethod ig/halt-key! :ib/client [_ client]
+  (.disconnect client))

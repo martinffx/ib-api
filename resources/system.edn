@@ -2,4 +2,5 @@
  :core/xtdb {:config #ig/ref :core/config}
  :iex/client {:config #ig/ref :core/config}
  :iex/repo {:xtdb #ig/ref :core/xtdb}
- :iex/core {:client #ig/ref :iex/client :repo #ig/ref :iex/repo}}
+ :iex/core {:client #ig/ref :iex/client :repo #ig/ref :iex/repo}
+:ib/client {:host "", :port 8080}}
